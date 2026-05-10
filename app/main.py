@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from app.api.v1 import routes_models
 from app.api.v1.router import api_router
 from app.core.config import get_settings
+from fastapi.middleware.cors import CORSMiddleware
+import os
+
 
 import time
 import logging
@@ -10,6 +13,20 @@ from fastapi import Request
 settings = get_settings()
 
 app = FastAPI(title=settings.app_name)
+
+allowed_origins = [
+    origin.strip()
+    for origin in os.getenv("ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(api_router, prefix=settings.api_v1_prefix)
 app.include_router(routes_models.router, prefix=settings.api_v1_prefix)
 
