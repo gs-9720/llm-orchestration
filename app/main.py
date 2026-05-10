@@ -26,6 +26,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 app.include_router(api_router, prefix=settings.api_v1_prefix)
 app.include_router(routes_models.router, prefix=settings.api_v1_prefix)

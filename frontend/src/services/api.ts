@@ -75,17 +75,24 @@ export async function streamChat({
   signal,
   onChunk
 }: StreamChatParams): Promise<void> {
-  const response = await fetch(`${API_BASE}/chat`, {
+  const response = await fetch(`${API_BASE}/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     signal,
     body: JSON.stringify({
-      message: prompt,
-      provider,
-      model,
-      stream: true
+        provider,
+        model,
+        messages: [
+            {
+            role: "user",
+            content: prompt
+            }
+        ],
+        stream: true,
+        temperature: 0.7,
+        max_tokens: 1024
     })
   });
 
